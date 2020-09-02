@@ -30,7 +30,11 @@ def basics(url):
 		if(config['passwords']):
 			for password in password_type:
 				if(password.get('type')!='password'):
-					report+="Input issue: Plain text password input found, Please change password type input!\n"	
+					report+="Input issue: Plain text password input found, Please change password type input!\n"
+
+		#XSS vulnerability check
+		report=xss_check(url,report)
+	
 	else:	
 		fail="Invalid Url found!"
 		return fail
@@ -41,4 +45,16 @@ def basics(url):
   		header="Vulnerability Report is as follows:\n"
   		header+="==================================\n\n"
   		report=header+report
+	return report
+
+def xss_check(url,report):
+	with open('/media/slappy/7BF04F772FFAA9A0/raja/XSS-Freak/xss-payload-list.txt','r') as f:
+		for line in f:
+			payload=line
+			req = requests.post(url + payload)
+			if payload in req.text:
+				report+="XSS Vulnerablity discovered!"
+				report+="Refer to XSS payloads for further escalation"
+				return report
+	report+="Secure from XSS Vulnerablity"
 	return report
