@@ -2,27 +2,23 @@ import pandas as pd
 import numpy as np
 import joblib 
 import logging
-
+from . import data_loader
 logger= logging.getLogger()
 
 
 def predictionFromModel(path):
-    #self.log_writer = logger.App_Logger(
+    #self.log_writer = logger.App_Logger()
     #pred_data_val.deletePredictionFile() #deletes the existing prediction file from last run!
-    #data_getter=data_loader_prediction.Data_Getter_Pred(path)
-    #data=data_getter.get_data()
+    data_getter=data_loader_prediction.Data_Getter_Pred()
+
+    data=data_getter.get_data()
+    
     modelReload1=joblib.load('featselect.pkl')
-    Data_new = modelReload1.transform(path)
+    Data_new = modelReload1.transform(data)
+
+    Legit_Train, Legit_Test, Malware_Train, Malware_Test = train_test_split(Data_new, Target ,test_size=0.2)
 
     modelReload2=joblib.load('RFModelforMD.pkl')
-    #modelReload2.predict(Legit_Test)
-
-    #modelReload1=joblib.load('featselect.pkl')
-    #Data_new = modelReload1.transform(Data)
-
-    #Legit_Train, Legit_Test, Malware_Train, Malware_Test = train_test_split(Data_new, Target ,test_size=0.2)
-
-    #modelReload2=joblib.load('RFModelforMD.pkl')
     result = modelReload2.predict(Legit_Test)
 
     final= pd.DataFrame(list(zip(result)),columns=['Predictions'])
