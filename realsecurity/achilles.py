@@ -48,7 +48,7 @@ def basics(url):
 	return report
 
 def xss_check(url,report):
-	with open('/media/slappy/7BF04F772FFAA9A0/raja/XSS-Freak/xss-payload-list.txt','r') as f:
+	with open('xss-payload-list.txt','r') as f:
 		for line in f:
 			payload=line
 			req = requests.post(url + payload)
